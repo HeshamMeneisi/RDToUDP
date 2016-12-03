@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,11 +27,14 @@ namespace Client
                 filepath.Text = dlg.FileName;
             }
         }
-
+        RDTClient cl;
         private void rbtn_Click(object sender, EventArgs e)
         {
             rbtn.Enabled = stpanel.Enabled = false;
-            RDTClient cl = new SAWClient(ip.Text, (int)pno.Value);
+            stopbtn.Enabled = true;
+            Helper.PLP = (double)plp.Value;
+            Helper.PCP = (double)pcp.Value;
+            cl = new SAWClient(ip.Text, (int)pno.Value);
             cl.Finished += fin;
             cl.Connect();
             cl.Retrieve(file.Text, filepath.Text);
@@ -38,7 +42,7 @@ namespace Client
 
         private void fin()
         {
-            Invoke(new Action(() => rbtn.Enabled = stpanel.Enabled = true));
+            Invoke(new Action(() => { stopbtn.Enabled = false; rbtn.Enabled = stpanel.Enabled = true; }));
         }
 
         private void clFrm_Load(object sender, EventArgs e)
@@ -63,6 +67,13 @@ namespace Client
                     dispbox.SelectionColor = Color.Green;
                 dispbox.AppendText("\r\n");
             }
+        }
+
+        private void stopbtn_Click(object sender, EventArgs e)
+        {
+            cl.Stop();
+            stopbtn.Enabled = false;
+            rbtn.Enabled = stpanel.Enabled = true;
         }
     }
 }

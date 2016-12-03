@@ -12,7 +12,7 @@ namespace RDToUDP
 
         public SAWSender(IPEndPoint cl, string path, string handle) : base(cl, path, handle)
         {
-            rttask = new TimedTask(100, () => Resend());
+            rttask = new TimedTask(50, () => Resend());
         }
 
         private void Resend()
@@ -42,13 +42,12 @@ namespace RDToUDP
                 OnDone();
             else
                 SendNext();
-            Discard:;
+            Discard: rttask.Start();
         }
 
         protected override void SendNext()
         {
             SendPacket(cseq);
-            rttask.Start();
         }
     }
 }

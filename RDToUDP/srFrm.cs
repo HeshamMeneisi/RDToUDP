@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Common;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RDToUDP
@@ -22,7 +17,9 @@ namespace RDToUDP
             stpanel.Enabled = stbtn.Enabled = false;
             stopbtn.Enabled = true;
             dispbox.Clear();
-            MainServer.Start((int)pno.Value, (double)plp.Value, (double)pcp.Value);
+            Helper.PLP =(double)plp.Value;
+            Helper.PCP = (double)pcp.Value;
+            MainServer.Start((int)pno.Value);
         }
 
         private void stopbtn_Click(object sender, EventArgs e)

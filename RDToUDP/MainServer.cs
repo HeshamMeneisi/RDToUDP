@@ -14,9 +14,9 @@ namespace RDToUDP
         const string WD = @"D:\WorkDir\Server\";
 
         public static Action<string, MType> Message;
-        static Thread mainthread = new Thread(() => StartServing());
+        static Thread mainthread;
+        static TimedTask cleaner = new TimedTask(5000, () => Cleanup());
         static int port;
-        static double plp, pcp;
         static Dictionary<string, RDTSender> AClients = new Dictionary<string, RDTSender>();
         static UdpClient udpsock;
         private static void StartServing()
@@ -58,17 +58,28 @@ namespace RDToUDP
             }
         }
 
-        public static void Start(int _port, double _plp, double _pcp)
+        public static void Start(int _port)
         {
+            mainthread = new Thread(() => StartServing());
             mainthread.Start();
             port = _port;
-            plp = _plp;
-            pcp = _pcp;
+            cleaner.Start();
         }
 
         public static void Stop()
         {
             mainthread.Abort();
+            udpsock.Close();
+            foreach (RDTSender s in AClients.Values)
+                s.Stop();
+            AClients.Clear();
+            cleaner.Stop();
+        }
+
+        private static void Cleanup()
+        {
+            foreach (RDTSender s in AClients.Values)
+                if (s.IsDone) { s.Stop(); AClients.Remove(s.Handle); }
         }
 
         private static void onsenderdone(string obj)

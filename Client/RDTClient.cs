@@ -20,7 +20,7 @@ namespace Client
         private int port;
         private UdpClient uc, fudp;
         private bool retrieving, connected, metareceived;
-        protected bool finished, cancelled;
+        protected bool finished;
         private int cport;
         protected int filesize;
         private TimedTask rttask;
@@ -70,7 +70,13 @@ namespace Client
 
         public void Stop()
         {
-            cancelled = true;
+            lock (this)
+            {
+                rttask.Stop();
+                uc.Close();
+                fudp.Close();
+                fstr.Close();
+            }
         }
 
         private void SendFileReq()
@@ -119,7 +125,6 @@ namespace Client
 
         void OnReceived(UdpReceiveResult res)
         {
-            if (cancelled) return;
             if (Helper.MakeChoice(Helper.PLP))  // Simulate packet loss
             {
                 Message?.Invoke("Simulated packet loss. ", MType.Important); goto Skip;

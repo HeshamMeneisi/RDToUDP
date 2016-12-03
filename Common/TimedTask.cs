@@ -20,11 +20,6 @@ namespace Common
             this.todo = todo;
         }
 
-        internal void Reset()
-        {
-            throw new NotImplementedException();
-        }
-
         private void elp(object sender, ElapsedEventArgs e)
         {
             todo();

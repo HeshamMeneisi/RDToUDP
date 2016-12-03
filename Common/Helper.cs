@@ -12,8 +12,8 @@ namespace Common
         public const short HSZ = 16;
         public const short DSZ = DGSZ - DHSZ;
         public const short DHSZ = HSZ + 4;
-        public static double PCP = 0.025;
-        public static double PLP = 0.025;
+        public static double PCP = 0;
+        public static double PLP = 0;
 
         static Random ran = new Random();
         public static void CreateCDGram(ref byte[] dgram, SignalType sig, int seq)

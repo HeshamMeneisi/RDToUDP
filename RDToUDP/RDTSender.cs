@@ -30,6 +30,8 @@ namespace RDToUDP
             }
         }
 
+        public bool IsDone { get { return done; } }
+
         public RDTSender(IPEndPoint cl, string path, string handle)
         {
             this.cl = cl;
@@ -45,6 +47,16 @@ namespace RDToUDP
             Message?.Invoke(handle + " (Started)", MType.Important);
             // No need to resend after a timeout, the client is the benefiter and thus has to resend
             SendMeta();
+        }
+
+        public void Stop()
+        {
+            lock (this)
+            {
+                rttask.Stop();
+                uc.Close();
+                fstr.Close();
+            }
         }
 
         private void ReceiveNext()

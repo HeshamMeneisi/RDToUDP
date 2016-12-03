@@ -118,6 +118,11 @@
             this.pcp.Name = "pcp";
             this.pcp.Size = new System.Drawing.Size(117, 20);
             this.pcp.TabIndex = 4;
+            this.pcp.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
             // 
             // plp
             // 
@@ -131,6 +136,11 @@
             this.plp.Name = "plp";
             this.plp.Size = new System.Drawing.Size(117, 20);
             this.plp.TabIndex = 4;
+            this.plp.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
             // 
             // pno
             // 
