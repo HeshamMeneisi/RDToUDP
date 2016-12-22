@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -21,7 +22,10 @@ namespace RDToUDP
         protected bool cansend;
         protected int filesize;
         protected TimedTask rttask;
-
+        private Dictionary<int, DateTime> rtable = new Dictionary<int, DateTime>();
+        private double rtt = 50, dev = 50, timeout;
+        const double alpha = 0.125, beta = 0.25;
+        const double mintimeout = 50;
         public string Handle
         {
             get
@@ -32,11 +36,14 @@ namespace RDToUDP
 
         public bool IsDone { get { return done; } }
 
+        public double EstTimeout { get { return timeout; } }
+
         public RDTSender(IPEndPoint cl, string path, string handle)
         {
             this.cl = cl;
             this.path = path;
             this.handle = handle;
+            timeout = Math.Max(rtt + 4 * dev, mintimeout);
             uc = new UdpClient(new IPEndPoint(IPAddress.Any, 0));
             uc.Connect(cl);
         }
@@ -66,6 +73,7 @@ namespace RDToUDP
 
         private void OnReceived(UdpReceiveResult result)
         {
+            DateTime rec = DateTime.Now;
             if (Helper.MakeChoice(Helper.PLP)) // Simulate packet loss
             {
                 Message?.Invoke(handle + " Simulated packet loss. ", MType.Important);
@@ -80,6 +88,8 @@ namespace RDToUDP
             Message?.Invoke(handle + " <= " + sig + " " + seq + (valid ? "" : "? Corrupt"), valid ? MType.ExtraDetail : MType.Important);
             if (valid)
             {
+                MonitorCongestion(seq, rec);
+                rttask.SetTime(EstTimeout);
                 if (!started && seq == 0)
                 {
                     if (cansend && filesize > 0 && sig == SignalType.ACK)
@@ -127,11 +137,36 @@ namespace RDToUDP
 
         protected void SendPacket(int seq)
         {
+            MonitorCongestion(seq);
             fstr.Seek(seq - 1, SeekOrigin.Begin);
             int read = fstr.Read(dbuffer, 0, dbuffer.Length);
             Helper.CreateDGram(ref dgbuffer, dbuffer, seq);
             uc.Send(dgbuffer, dgbuffer.Length);
             Message?.Invoke(handle + " => Sent PKT: " + seq, MType.ExtraDetail);
+        }
+
+        private void MonitorCongestion(int seq, DateTime? rec = null)
+        {
+            lock (this)
+            {
+                if (rtable.ContainsKey(seq) && rec.HasValue)
+                {
+                    int time = ((DateTime)rec).Subtract(rtable[seq]).Milliseconds;
+                    // EstimatedRTT = (1-alpha)*EstimatedRTT + alpha*SampleRTT
+                    rtt = (1 - alpha) * rtt + alpha * time;
+                    // DevRTT = (1-beta)*DevRTT + beta*| SampleRTT - EstimatedRTT |
+                    dev = (1 - beta) * dev + beta * Math.Abs(time - rtt);
+                    var lt = timeout;
+                    timeout = Math.Max(rtt + 4 * dev, mintimeout);
+                    if (timeout != lt)
+                        Message?.Invoke(handle + " <=> Timeout = " + EstTimeout.ToString(".##"), MType.ExtraDetail);
+                    rtable.Remove(seq);
+                }
+                else
+                {
+                    rtable[seq] = DateTime.Now;
+                }
+            }
         }
 
         protected void OnDone()

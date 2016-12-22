@@ -141,7 +141,7 @@ namespace Client
                     {
                         // Establish connection using new socket
                         fudp.Connect(res.RemoteEndPoint);
-                        rttask.Set(() => SendACK(0));
+                        rttask.SetAction(() => SendACK(0));
                         OnMetaReceived();
                     }
                 }

@@ -26,6 +26,15 @@ namespace Common
                 todo();
         }
 
+        public void SetTime(double newms)
+        {
+            timer.Stop();
+            timer.Dispose();
+            timer = new Timer(newms);
+            timer.Elapsed += elp;
+            timer.AutoReset = true;
+        }
+
         public void Start()
         {
             Running = true;
@@ -38,7 +47,7 @@ namespace Common
             timer.Stop();
         }
 
-        internal void Set(Action todo)
+        internal void SetAction(Action todo)
         {
             this.todo = todo;
         }
