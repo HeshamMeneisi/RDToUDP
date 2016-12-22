@@ -136,6 +136,7 @@ namespace RDToUDP
 
         protected void OnDone()
         {
+            if (done) return;
             rttask.Stop();
             done = true;
             fstr.Close();

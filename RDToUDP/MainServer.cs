@@ -63,6 +63,9 @@ namespace RDToUDP
                     case Method.GBN:
                         rdts = new GBNSender(cl, Path.Combine(WD, fname), handle, wsz);
                         break;
+                    case Method.SR:
+                        rdts = new SRSender(cl, Path.Combine(WD, fname), handle, wsz);
+                        break;
                 }
                 if (rdts != null)
                 {
@@ -80,6 +83,7 @@ namespace RDToUDP
             switch (m)
             {
                 case Method.GBN:
+                case Method.SR:
                     if (!short.TryParse(extra[0].ToString(), out wsz))
                         wsz = 5;
                     break;

@@ -16,22 +16,25 @@ namespace Client
 
         protected override void OnDataReceived(bool valid, int seq)
         {
-            if (valid)
+            lock (this)
             {
-                if (seq == nseq)
+                if (valid)
                 {
-                    Deliver(seq);
-                    nseq += Helper.DSZ;                    
-                }
-                SendACK(seq);
-                if (nseq > filesize) OnFinished();
-            }
-            else // Corrupted
-            {
-                if (seq == nseq)
-                    SendNAK(seq);
-                else // If duplicate, acknowledge anyway
+                    if (seq == nseq)
+                    {
+                        Deliver(seq);
+                        nseq += Helper.DSZ;
+                    }
                     SendACK(seq);
+                    if (nseq > filesize) OnFinished();
+                }
+                else // Corrupted
+                {
+                    if (seq == nseq)
+                        SendNAK(seq);
+                    else // If duplicate, acknowledge anyway
+                        SendACK(seq);
+                }
             }
         }
     }

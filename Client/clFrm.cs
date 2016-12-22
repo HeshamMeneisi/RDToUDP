@@ -41,6 +41,7 @@ namespace Client
                 {
                     case 0: cl = new SAWClient(ip.Text, (int)pno.Value); break;
                     case 1: cl = new GBNClient(ip.Text, (int)pno.Value); break;
+                    case 2: cl = new SRClient(ip.Text, (int)pno.Value, (short)wsz.Value); break;
                 }
                 cl.Finished += fin;
                 cl.Connect();

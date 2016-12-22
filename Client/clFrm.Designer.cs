@@ -30,8 +30,10 @@
         {
             this.dispbox = new System.Windows.Forms.RichTextBox();
             this.stpanel = new System.Windows.Forms.Panel();
+            this.protocol = new System.Windows.Forms.ComboBox();
             this.pcp = new System.Windows.Forms.NumericUpDown();
             this.plp = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -46,12 +48,13 @@
             this.rbtn = new System.Windows.Forms.Button();
             this.fd = new System.Windows.Forms.CheckBox();
             this.stopbtn = new System.Windows.Forms.Button();
-            this.protocol = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.wsz = new System.Windows.Forms.NumericUpDown();
+            this.wszlabel = new System.Windows.Forms.Label();
             this.stpanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pno)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.wsz)).BeginInit();
             this.SuspendLayout();
             // 
             // dispbox
@@ -67,6 +70,8 @@
             // 
             // stpanel
             // 
+            this.stpanel.Controls.Add(this.wsz);
+            this.stpanel.Controls.Add(this.wszlabel);
             this.stpanel.Controls.Add(this.protocol);
             this.stpanel.Controls.Add(this.pcp);
             this.stpanel.Controls.Add(this.plp);
@@ -88,10 +93,24 @@
             this.stpanel.Size = new System.Drawing.Size(284, 139);
             this.stpanel.TabIndex = 8;
             // 
+            // protocol
+            // 
+            this.protocol.DisplayMember = "1";
+            this.protocol.FormattingEnabled = true;
+            this.protocol.Items.AddRange(new object[] {
+            "Stop & Wait",
+            "Go-Back-N",
+            "Selective-Repeat"});
+            this.protocol.Location = new System.Drawing.Point(47, 115);
+            this.protocol.Name = "protocol";
+            this.protocol.Size = new System.Drawing.Size(105, 21);
+            this.protocol.TabIndex = 14;
+            this.protocol.Text = "Selective-Repeat";
+            // 
             // pcp
             // 
             this.pcp.DecimalPlaces = 4;
-            this.pcp.Location = new System.Drawing.Point(180, 89);
+            this.pcp.Location = new System.Drawing.Point(185, 89);
             this.pcp.Maximum = new decimal(new int[] {
             1,
             0,
@@ -123,6 +142,15 @@
             0,
             0,
             131072});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 118);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Method";
             // 
             // label5
             // 
@@ -265,27 +293,31 @@
             this.stopbtn.UseVisualStyleBackColor = true;
             this.stopbtn.Click += new System.EventHandler(this.stopbtn_Click);
             // 
-            // protocol
+            // wsz
             // 
-            this.protocol.DisplayMember = "1";
-            this.protocol.FormattingEnabled = true;
-            this.protocol.Items.AddRange(new object[] {
-            "Stop & Wait",
-            "Go-Back-N"});
-            this.protocol.Location = new System.Drawing.Point(49, 115);
-            this.protocol.Name = "protocol";
-            this.protocol.Size = new System.Drawing.Size(123, 21);
-            this.protocol.TabIndex = 14;
-            this.protocol.Text = "Go-Back-N";
+            this.wsz.Location = new System.Drawing.Point(183, 115);
+            this.wsz.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.wsz.Name = "wsz";
+            this.wsz.Size = new System.Drawing.Size(94, 20);
+            this.wsz.TabIndex = 16;
+            this.wsz.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             // 
-            // label7
+            // wszlabel
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 118);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(43, 13);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Method";
+            this.wszlabel.AutoSize = true;
+            this.wszlabel.Location = new System.Drawing.Point(152, 118);
+            this.wszlabel.Name = "wszlabel";
+            this.wszlabel.Size = new System.Drawing.Size(34, 13);
+            this.wszlabel.TabIndex = 15;
+            this.wszlabel.Text = "WND";
             // 
             // clFrm
             // 
@@ -308,6 +340,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pno)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.wsz)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -335,6 +368,8 @@
         private System.Windows.Forms.Button stopbtn;
         private System.Windows.Forms.ComboBox protocol;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown wsz;
+        private System.Windows.Forms.Label wszlabel;
     }
 }
 

@@ -34,20 +34,20 @@
             this.label3 = new System.Windows.Forms.Label();
             this.stopbtn = new System.Windows.Forms.Button();
             this.stpanel = new System.Windows.Forms.Panel();
+            this.protocol = new System.Windows.Forms.ComboBox();
+            this.wsz = new System.Windows.Forms.NumericUpDown();
             this.pcp = new System.Windows.Forms.NumericUpDown();
             this.plp = new System.Windows.Forms.NumericUpDown();
             this.pno = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.wszlabel = new System.Windows.Forms.Label();
             this.dispbox = new System.Windows.Forms.RichTextBox();
             this.fd = new System.Windows.Forms.CheckBox();
-            this.wszlabel = new System.Windows.Forms.Label();
-            this.wsz = new System.Windows.Forms.NumericUpDown();
-            this.protocol = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.stpanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wsz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pno)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wsz)).BeginInit();
             this.SuspendLayout();
             // 
             // stbtn
@@ -115,6 +115,38 @@
             this.stpanel.Size = new System.Drawing.Size(310, 80);
             this.stpanel.TabIndex = 4;
             // 
+            // protocol
+            // 
+            this.protocol.DisplayMember = "1";
+            this.protocol.FormattingEnabled = true;
+            this.protocol.Items.AddRange(new object[] {
+            "Stop & Wait",
+            "Go-Back-N",
+            "Selective-Repeat"});
+            this.protocol.Location = new System.Drawing.Point(199, 6);
+            this.protocol.Name = "protocol";
+            this.protocol.Size = new System.Drawing.Size(108, 21);
+            this.protocol.TabIndex = 7;
+            this.protocol.Text = "Selective-Repeat";
+            this.protocol.SelectedIndexChanged += new System.EventHandler(this.protocol_SelectedIndexChanged);
+            // 
+            // wsz
+            // 
+            this.wsz.Location = new System.Drawing.Point(199, 29);
+            this.wsz.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.wsz.Name = "wsz";
+            this.wsz.Size = new System.Drawing.Size(108, 20);
+            this.wsz.TabIndex = 4;
+            this.wsz.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // pcp
             // 
             this.pcp.DecimalPlaces = 4;
@@ -173,6 +205,24 @@
             0,
             0});
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(156, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Method";
+            // 
+            // wszlabel
+            // 
+            this.wszlabel.AutoSize = true;
+            this.wszlabel.Location = new System.Drawing.Point(156, 32);
+            this.wszlabel.Name = "wszlabel";
+            this.wszlabel.Size = new System.Drawing.Size(34, 13);
+            this.wszlabel.TabIndex = 2;
+            this.wszlabel.Text = "WND";
+            // 
             // dispbox
             // 
             this.dispbox.BackColor = System.Drawing.Color.Black;
@@ -195,55 +245,6 @@
             this.fd.Text = "Full Debug";
             this.fd.UseVisualStyleBackColor = true;
             // 
-            // wszlabel
-            // 
-            this.wszlabel.AutoSize = true;
-            this.wszlabel.Location = new System.Drawing.Point(156, 32);
-            this.wszlabel.Name = "wszlabel";
-            this.wszlabel.Size = new System.Drawing.Size(34, 13);
-            this.wszlabel.TabIndex = 2;
-            this.wszlabel.Text = "WND";
-            // 
-            // wsz
-            // 
-            this.wsz.Location = new System.Drawing.Point(199, 29);
-            this.wsz.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.wsz.Name = "wsz";
-            this.wsz.Size = new System.Drawing.Size(108, 20);
-            this.wsz.TabIndex = 4;
-            this.wsz.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // protocol
-            // 
-            this.protocol.DisplayMember = "1";
-            this.protocol.FormattingEnabled = true;
-            this.protocol.Items.AddRange(new object[] {
-            "Stop & Wait",
-            "Go-Back-N"});
-            this.protocol.Location = new System.Drawing.Point(199, 6);
-            this.protocol.Name = "protocol";
-            this.protocol.Size = new System.Drawing.Size(108, 21);
-            this.protocol.TabIndex = 7;
-            this.protocol.Text = "Go-Back-N";
-            this.protocol.SelectedIndexChanged += new System.EventHandler(this.protocol_SelectedIndexChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(156, 10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 13);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "Method";
-            // 
             // srFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,10 +263,10 @@
             this.Load += new System.EventHandler(this.srFrm_Load);
             this.stpanel.ResumeLayout(false);
             this.stpanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wsz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pno)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wsz)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

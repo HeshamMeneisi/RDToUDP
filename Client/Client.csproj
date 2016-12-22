@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RDTClient.cs" />
     <Compile Include="SAWClient.cs" />
+    <Compile Include="SRClient.cs" />
     <EmbeddedResource Include="clFrm.resx">
       <DependentUpon>clFrm.cs</DependentUpon>
     </EmbeddedResource>

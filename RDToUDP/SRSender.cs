@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace RDToUDP
 {
-    class GBNSender : RDTSender
+    class SRSender : RDTSender
     {
         const int MaxResend = 20;
         int baseseq = 1;
         int rsc = 0;
         short wsz;
+        bool[] acklist;
 
-        public GBNSender(IPEndPoint cl, string path, string handle, short wsz) : base(cl, path, handle)
+        public SRSender(IPEndPoint cl, string path, string handle, short wsz) : base(cl, path, handle)
         {
             this.wsz = wsz;
+            acklist = new bool[wsz];
             rttask = new TimedTask(50, () => SendNext());
         }
 
@@ -28,6 +30,7 @@ namespace RDToUDP
                 rsc++;
                 for (int i = 0; i < wsz; i++)
                 {
+                    if (acklist[i]) continue;
                     int seq = baseseq + i * Helper.DSZ;
                     if (seq < filesize)
                         SendPacket(seq);
@@ -46,10 +49,24 @@ namespace RDToUDP
             {
                 if (valid && sig == SignalType.ACK)
                 {
-                    if (seq >= baseseq && seq < baseseq + wsz * Helper.DSZ)
+                    int n = (seq - baseseq) / Helper.DSZ;
+                    if (n >= 0 && n < wsz)
                     {
                         rsc = 0;
-                        baseseq = seq + Helper.DSZ;
+                        acklist[n] = true;
+
+                        int i, j = 0;
+                        for (i = 0; i < wsz && acklist[i]; i++) ;
+
+                        baseseq += i * Helper.DSZ;
+
+                        for (; j < wsz && i < wsz; j++)
+                            acklist[j] = acklist[i++];
+
+                        for (; j < wsz; j++)
+                            acklist[j] = false;
+
+                        if (baseseq > filesize) OnDone();
                     }
                 }
                 if (baseseq > filesize) // Check if file was completely transmitted     
