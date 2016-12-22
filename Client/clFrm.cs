@@ -30,14 +30,24 @@ namespace Client
         RDTClient cl;
         private void rbtn_Click(object sender, EventArgs e)
         {
-            rbtn.Enabled = stpanel.Enabled = false;
-            stopbtn.Enabled = true;
-            Helper.PLP = (double)plp.Value;
-            Helper.PCP = (double)pcp.Value;
-            cl = new SAWClient(ip.Text, (int)pno.Value);
-            cl.Finished += fin;
-            cl.Connect();
-            cl.Retrieve(file.Text, filepath.Text);
+            if (protocol.SelectedIndex > -1)
+            {
+                rbtn.Enabled = stpanel.Enabled = false;
+                stopbtn.Enabled = true;
+                Helper.PLP = (double)plp.Value;
+                Helper.PCP = (double)pcp.Value;
+                cl = null;
+                switch (protocol.SelectedIndex)
+                {
+                    case 0: cl = new SAWClient(ip.Text, (int)pno.Value); break;
+                    case 1: cl = new GBNClient(ip.Text, (int)pno.Value); break;
+                }
+                cl.Finished += fin;
+                cl.Connect();
+                cl.Retrieve(file.Text, filepath.Text);
+            }
+            else
+                MessageBox.Show("Please select a protocol.", "Cannot Start");
         }
 
         private void fin()

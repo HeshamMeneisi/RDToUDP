@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GBNSender.cs" />
     <Compile Include="MainServer.cs" />
     <Compile Include="RDTSender.cs" />
     <Compile Include="SAWSender.cs" />

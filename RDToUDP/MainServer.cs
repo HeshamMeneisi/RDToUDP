@@ -19,6 +19,8 @@ namespace RDToUDP
         static int port;
         static Dictionary<string, RDTSender> AClients = new Dictionary<string, RDTSender>();
         static UdpClient udpsock;
+        static Method method;
+        static short wsz;
         private static void StartServing()
         {
             udpsock = new UdpClient(new IPEndPoint(IPAddress.Any, port));
@@ -52,14 +54,36 @@ namespace RDToUDP
             }
             else
             {
-                var rdts = new SAWSender(cl, Path.Combine(WD, fname), handle);
-                AClients.Add(handle, rdts);
-                rdts.Start();
+                RDTSender rdts = null;
+                switch (method)
+                {
+                    case Method.SAW:
+                        rdts = new SAWSender(cl, Path.Combine(WD, fname), handle);
+                        break;
+                    case Method.GBN:
+                        rdts = new GBNSender(cl, Path.Combine(WD, fname), handle, wsz);
+                        break;
+                }
+                if (rdts != null)
+                {
+                    AClients.Add(handle, rdts);
+                    rdts.Start();
+                }
+                else
+                    throw new Exception("Unidentified method: " + method);
             }
         }
 
-        public static void Start(int _port)
+        public static void Start(int _port, Method m, params object[] extra)
         {
+            method = m;
+            switch (m)
+            {
+                case Method.GBN:
+                    if (!short.TryParse(extra[0].ToString(), out wsz))
+                        wsz = 5;
+                    break;
+            }
             mainthread = new Thread(() => StartServing());
             mainthread.Start();
             port = _port;

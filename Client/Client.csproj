@@ -52,6 +52,7 @@
     <Compile Include="clFrm.Designer.cs">
       <DependentUpon>clFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GBNClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RDTClient.cs" />

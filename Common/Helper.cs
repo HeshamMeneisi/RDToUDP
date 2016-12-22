@@ -115,3 +115,10 @@ public enum RDTResponse
 {
     Accepted = 0, Rejected = 1, FileNotFound = 2
 }
+
+public enum Method
+{
+    SAW = 0,
+    GBN = 1,
+    SR = 2
+}

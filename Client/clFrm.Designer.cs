@@ -30,6 +30,10 @@
         {
             this.dispbox = new System.Windows.Forms.RichTextBox();
             this.stpanel = new System.Windows.Forms.Panel();
+            this.pcp = new System.Windows.Forms.NumericUpDown();
+            this.plp = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.filepath = new System.Windows.Forms.TextBox();
             this.file = new System.Windows.Forms.TextBox();
@@ -41,32 +45,32 @@
             this.label1 = new System.Windows.Forms.Label();
             this.rbtn = new System.Windows.Forms.Button();
             this.fd = new System.Windows.Forms.CheckBox();
-            this.pcp = new System.Windows.Forms.NumericUpDown();
-            this.plp = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.stopbtn = new System.Windows.Forms.Button();
+            this.protocol = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.stpanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pno)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pno)).BeginInit();
             this.SuspendLayout();
             // 
             // dispbox
             // 
             this.dispbox.BackColor = System.Drawing.Color.Black;
             this.dispbox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dispbox.Location = new System.Drawing.Point(0, 149);
+            this.dispbox.Location = new System.Drawing.Point(0, 167);
             this.dispbox.Name = "dispbox";
             this.dispbox.ReadOnly = true;
-            this.dispbox.Size = new System.Drawing.Size(284, 273);
+            this.dispbox.Size = new System.Drawing.Size(284, 255);
             this.dispbox.TabIndex = 9;
             this.dispbox.Text = "";
             // 
             // stpanel
             // 
+            this.stpanel.Controls.Add(this.protocol);
             this.stpanel.Controls.Add(this.pcp);
             this.stpanel.Controls.Add(this.plp);
+            this.stpanel.Controls.Add(this.label7);
             this.stpanel.Controls.Add(this.label5);
             this.stpanel.Controls.Add(this.label6);
             this.stpanel.Controls.Add(this.button1);
@@ -81,8 +85,62 @@
             this.stpanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.stpanel.Location = new System.Drawing.Point(0, 0);
             this.stpanel.Name = "stpanel";
-            this.stpanel.Size = new System.Drawing.Size(284, 118);
+            this.stpanel.Size = new System.Drawing.Size(284, 139);
             this.stpanel.TabIndex = 8;
+            // 
+            // pcp
+            // 
+            this.pcp.DecimalPlaces = 4;
+            this.pcp.Location = new System.Drawing.Point(180, 89);
+            this.pcp.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.pcp.Name = "pcp";
+            this.pcp.Size = new System.Drawing.Size(92, 20);
+            this.pcp.TabIndex = 12;
+            this.pcp.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            // 
+            // plp
+            // 
+            this.plp.DecimalPlaces = 4;
+            this.plp.Location = new System.Drawing.Point(37, 89);
+            this.plp.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.plp.Name = "plp";
+            this.plp.Size = new System.Drawing.Size(92, 20);
+            this.plp.TabIndex = 13;
+            this.plp.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 91);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "PLP";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(146, 92);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(28, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "PCP";
             // 
             // button1
             // 
@@ -178,7 +236,7 @@
             // 
             // rbtn
             // 
-            this.rbtn.Location = new System.Drawing.Point(93, 120);
+            this.rbtn.Location = new System.Drawing.Point(99, 141);
             this.rbtn.Name = "rbtn";
             this.rbtn.Size = new System.Drawing.Size(75, 23);
             this.rbtn.TabIndex = 10;
@@ -189,77 +247,45 @@
             // fd
             // 
             this.fd.AutoSize = true;
-            this.fd.Location = new System.Drawing.Point(6, 124);
+            this.fd.Location = new System.Drawing.Point(12, 145);
             this.fd.Name = "fd";
             this.fd.Size = new System.Drawing.Size(77, 17);
             this.fd.TabIndex = 11;
             this.fd.Text = "Full Debug";
             this.fd.UseVisualStyleBackColor = true;
             // 
-            // pcp
-            // 
-            this.pcp.DecimalPlaces = 4;
-            this.pcp.Location = new System.Drawing.Point(180, 89);
-            this.pcp.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.pcp.Name = "pcp";
-            this.pcp.Size = new System.Drawing.Size(92, 20);
-            this.pcp.TabIndex = 12;
-            this.pcp.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-            // 
-            // plp
-            // 
-            this.plp.DecimalPlaces = 4;
-            this.plp.Location = new System.Drawing.Point(37, 89);
-            this.plp.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.plp.Name = "plp";
-            this.plp.Size = new System.Drawing.Size(92, 20);
-            this.plp.TabIndex = 13;
-            this.plp.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 91);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(27, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "PLP";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(146, 92);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "PCP";
-            // 
             // stopbtn
             // 
             this.stopbtn.Enabled = false;
-            this.stopbtn.Location = new System.Drawing.Point(172, 120);
+            this.stopbtn.Location = new System.Drawing.Point(178, 141);
             this.stopbtn.Name = "stopbtn";
             this.stopbtn.Size = new System.Drawing.Size(75, 23);
             this.stopbtn.TabIndex = 10;
             this.stopbtn.Text = "Stop";
             this.stopbtn.UseVisualStyleBackColor = true;
             this.stopbtn.Click += new System.EventHandler(this.stopbtn_Click);
+            // 
+            // protocol
+            // 
+            this.protocol.DisplayMember = "1";
+            this.protocol.FormattingEnabled = true;
+            this.protocol.Items.AddRange(new object[] {
+            "Stop & Wait",
+            "Go-Back-N"});
+            this.protocol.Location = new System.Drawing.Point(49, 115);
+            this.protocol.Name = "protocol";
+            this.protocol.Size = new System.Drawing.Size(123, 21);
+            this.protocol.TabIndex = 14;
+            this.protocol.Text = "Go-Back-N";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 118);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Method";
             // 
             // clFrm
             // 
@@ -279,9 +305,9 @@
             this.Load += new System.EventHandler(this.clFrm_Load);
             this.stpanel.ResumeLayout(false);
             this.stpanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pno)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.plp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pno)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -307,6 +333,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button stopbtn;
+        private System.Windows.Forms.ComboBox protocol;
+        private System.Windows.Forms.Label label7;
     }
 }
 

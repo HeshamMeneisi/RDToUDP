@@ -39,7 +39,10 @@ namespace RDToUDP
             }
             // If corrupted or NAK, we will resend last packet (no change to nseq)
             if (cseq > filesize) // Check if file was completely transmitted     
+            {
                 OnDone();
+                return;
+            }
             else
                 SendNext();
             Discard: rttask.Start();

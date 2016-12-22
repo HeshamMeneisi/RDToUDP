@@ -22,7 +22,8 @@ namespace Common
 
         private void elp(object sender, ElapsedEventArgs e)
         {
-            todo();
+            if (Running)
+                todo();
         }
 
         public void Start()
