@@ -1,5 +1,4 @@
 ﻿using Common;
-using System;
 using System.Net;
 
 namespace RDToUDP
@@ -28,27 +27,24 @@ namespace RDToUDP
 
         protected override void OnResReceived(bool valid, int seq, SignalType sig)
         {
-            lock (this)
+            if (valid && sig == SignalType.ACK)
             {
-                if (valid && sig == SignalType.ACK)
+                if (seq == cseq)
                 {
-                    if (seq == cseq)
-                    {
-                        rsc = 0;
-                        cseq += Helper.DSZ;
-                    }
-                    else goto Discard; // Else, it's a redundant ACK                
+                    rsc = 0;
+                    cseq += Helper.DSZ;
                 }
-                // If corrupted or NAK, we will resend last packet (no change to nseq)
-                if (cseq > filesize) // Check if file was completely transmitted     
-                {
-                    OnDone();
-                    return;
-                }
-                else
-                    SendNext();
-                Discard: rttask.Start();
+                else goto Discard; // Else, it's a redundant ACK                
             }
+            // If corrupted or NAK, we will resend last packet (no change to nseq)
+            if (cseq > filesize) // Check if file was completely transmitted     
+            {
+                OnDone();
+                return;
+            }
+            else
+                SendNext();
+            Discard: rttask.Start();
         }
 
         protected override void SendNext()

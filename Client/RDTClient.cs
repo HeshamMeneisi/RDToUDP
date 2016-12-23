@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -125,40 +124,42 @@ namespace Client
 
         void OnReceived(UdpReceiveResult res)
         {
-            if (Helper.MakeChoice(Helper.PLP))  // Simulate packet loss
+            if (!finished)
+                ReceiveNext();
+            lock (this)
             {
-                Message?.Invoke("Simulated packet loss. ", MType.Important); goto Skip;
-            }
-            int seq;
-            bool valid = Helper.Extract(res.Buffer, ref buffer, out seq);
-            Message?.Invoke("Received PKT: " + seq + (valid ? "" : "? (Corrupt)"), valid ? MType.ExtraDetail : MType.Important);
-            if (valid)
-            {
-                if (seq == 0)
+                if (Helper.MakeChoice(Helper.PLP))  // Simulate packet loss
                 {
-                    if (metareceived) SendACK(0);
+                    Message?.Invoke("Simulated packet loss. ", MType.Important); return;
+                }
+                int seq;
+                bool valid = Helper.Extract(res.Buffer, ref buffer, out seq);
+                Message?.Invoke("Received PKT: " + seq + (valid ? "" : "? (Corrupt)"), valid ? MType.ExtraDetail : MType.Important);
+                if (valid)
+                {
+                    if (seq == 0)
+                    {
+                        if (metareceived) SendACK(0);
+                        else
+                        {
+                            // Establish connection using new socket
+                            fudp.Connect(res.RemoteEndPoint);
+                            rttask.SetAction(() => SendACK(0));
+                            OnMetaReceived();
+                        }
+                    }
                     else
                     {
-                        // Establish connection using new socket
-                        fudp.Connect(res.RemoteEndPoint);
-                        rttask.SetAction(() => SendACK(0));
-                        OnMetaReceived();
+                        if (rttask.Running) rttask.Stop();
+                        OnDataReceived(valid, seq);
                     }
                 }
                 else
                 {
-                    if (rttask.Running) rttask.Stop();
-                    OnDataReceived(valid, seq);
+                    if (metareceived)
+                        OnDataReceived(valid, seq);
                 }
-            }
-            else
-            {
-                if (metareceived)
-                    OnDataReceived(valid, seq);
-            }
-            Skip:
-            if (!finished)
-                ReceiveNext();
+            }      
         }
         protected void SendACK(int seq)
         {
@@ -166,6 +167,7 @@ namespace Client
             fudp.Send(sb, sb.Length);
             Message?.Invoke("ACK PKT: " + seq, MType.ExtraDetail);
         }
+
         protected void SendNAK(int seq)
         {
             Helper.CreateCDGram(ref sb, SignalType.NAK, seq);

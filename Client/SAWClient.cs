@@ -1,7 +1,4 @@
 ﻿using Common;
-using System;
-using System.IO;
-using System.Net.Sockets;
 
 namespace Client
 {
@@ -16,25 +13,22 @@ namespace Client
 
         protected override void OnDataReceived(bool valid, int seq)
         {
-            lock (this)
+            if (valid)
             {
-                if (valid)
+                if (seq == nseq)
                 {
-                    if (seq == nseq)
-                    {
-                        Deliver(seq);
-                        nseq += Helper.DSZ;
-                    }
+                    Deliver(seq);
+                    nseq += Helper.DSZ;
+                }
+                SendACK(seq);
+                if (nseq > filesize) OnFinished();
+            }
+            else // Corrupted
+            {
+                if (seq == nseq)
+                    SendNAK(seq);
+                else // If duplicate, acknowledge anyway
                     SendACK(seq);
-                    if (nseq > filesize) OnFinished();
-                }
-                else // Corrupted
-                {
-                    if (seq == nseq)
-                        SendNAK(seq);
-                    else // If duplicate, acknowledge anyway
-                        SendACK(seq);
-                }
             }
         }
     }

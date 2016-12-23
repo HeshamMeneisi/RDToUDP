@@ -1,16 +1,11 @@
 ﻿using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RDToUDP
 {
     class GBNSender : RDTSender
     {
-        const int MaxResend = 20;
+        const int MaxResend = 50;
         int baseseq = 1;
         int rsc = 0;
         short wsz;
@@ -42,21 +37,18 @@ namespace RDToUDP
 
         protected override void OnResReceived(bool valid, int seq, SignalType sig)
         {
-            lock (this)
+            if (valid && sig == SignalType.ACK)
             {
-                if (valid && sig == SignalType.ACK)
+                if (seq >= baseseq && seq < baseseq + wsz * Helper.DSZ)
                 {
-                    if (seq >= baseseq && seq < baseseq + wsz * Helper.DSZ)
-                    {
-                        rsc = 0;
-                        baseseq = seq + Helper.DSZ;
-                    }
+                    rsc = 0;
+                    baseseq = seq + Helper.DSZ;
                 }
-                if (baseseq > filesize) // Check if file was completely transmitted     
-                    OnDone();
-                else
-                    rttask.Start();
             }
+            if (baseseq > filesize) // Check if file was completely transmitted     
+                OnDone();
+            else
+                rttask.Start();
         }
 
         protected override void SendNext()

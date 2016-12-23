@@ -23,9 +23,9 @@ namespace RDToUDP
         protected int filesize;
         protected TimedTask rttask;
         private Dictionary<int, DateTime> rtable = new Dictionary<int, DateTime>();
-        private double rtt = 50, dev = 50, timeout;
+        private double rtt = 5, dev = 0, timeout;
         const double alpha = 0.125, beta = 0.25;
-        const double mintimeout = 50;
+        const double mintimeout = 5;
         public string Handle
         {
             get
@@ -74,48 +74,50 @@ namespace RDToUDP
         private void OnReceived(UdpReceiveResult result)
         {
             DateTime rec = DateTime.Now;
-            if (Helper.MakeChoice(Helper.PLP)) // Simulate packet loss
-            {
-                Message?.Invoke(handle + " Simulated packet loss. ", MType.Important);
-                goto Skip;
-            }
-            if (!metasent) goto Skip; // The client doesn't know the new socket, but we have to be careful
-            var dgram = result.Buffer;
-            SignalType sig;
-            int seq;
-            bool valid;
-            valid = Helper.ParseCDG(result.Buffer, out sig, out seq);
-            Message?.Invoke(handle + " <= " + sig + " " + seq + (valid ? "" : "? Corrupt"), valid ? MType.ExtraDetail : MType.Important);
-            if (valid)
-            {
-                MonitorCongestion(seq, rec);
-                rttask.SetTime(EstTimeout);
-                if (!started && seq == 0)
-                {
-                    if (cansend && filesize > 0 && sig == SignalType.ACK)
-                    {
-                        started = true;
-                        SendNext();
-                    }
-                    else if (sig == SignalType.NAK)
-                        SendMeta();
-                    else
-                        OnDone();
-                }
-                else if (seq > 0)
-                {
-                    rttask.Stop();
-                    OnResReceived(valid, seq, sig);
-                }
-            }
-            else
-            {
-                if (started) OnResReceived(valid, seq, sig); // Let the implemented protocol handle it
-                else SendMeta();
-            }
-            Skip:
             if (!done)
                 ReceiveNext();
+            lock (this)
+            {
+                if (Helper.MakeChoice(Helper.PLP)) // Simulate packet loss
+                {
+                    Message?.Invoke(handle + " Simulated packet loss. ", MType.Important);
+                    return;
+                }
+                if (!metasent) return; // The client doesn't know the new socket, but we have to be careful
+                var dgram = result.Buffer;
+                SignalType sig;
+                int seq;
+                bool valid;
+                valid = Helper.ParseCDG(result.Buffer, out sig, out seq);
+                Message?.Invoke(handle + " <= " + sig + " " + seq + (valid ? "" : "? Corrupt"), valid ? MType.ExtraDetail : MType.Important);
+                if (valid)
+                {
+                    MonitorCongestion(seq, rec);
+                    rttask.SetTime(EstTimeout);
+                    if (!started && seq == 0)
+                    {
+                        if (cansend && filesize > 0 && sig == SignalType.ACK)
+                        {
+                            started = true;
+                            SendNext();
+                        }
+                        else if (sig == SignalType.NAK)
+                            SendMeta();
+                        else
+                            OnDone();
+                    }
+                    else if (seq > 0)
+                    {
+                        rttask.Stop();
+                        OnResReceived(valid, seq, sig);
+                    }
+                }
+                else
+                {
+                    if (started) OnResReceived(valid, seq, sig); // Let the implemented protocol handle it
+                    else SendMeta();
+                }
+            }
         }
 
         public void SendMeta()
@@ -151,7 +153,7 @@ namespace RDToUDP
             {
                 if (rtable.ContainsKey(seq) && rec.HasValue)
                 {
-                    int time = ((DateTime)rec).Subtract(rtable[seq]).Milliseconds;
+                    double time = ((DateTime)rec).Subtract(rtable[seq]).TotalMilliseconds;
                     // EstimatedRTT = (1-alpha)*EstimatedRTT + alpha*SampleRTT
                     rtt = (1 - alpha) * rtt + alpha * time;
                     // DevRTT = (1-beta)*DevRTT + beta*| SampleRTT - EstimatedRTT |

@@ -1,13 +1,6 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Client
@@ -28,8 +21,10 @@ namespace Client
             }
         }
         RDTClient cl;
+        DateTime starttime;
         private void rbtn_Click(object sender, EventArgs e)
         {
+            starttime = DateTime.Now;
             if (protocol.SelectedIndex > -1)
             {
                 rbtn.Enabled = stpanel.Enabled = false;
@@ -53,7 +48,8 @@ namespace Client
 
         private void fin()
         {
-            Invoke(new Action(() => { stopbtn.Enabled = false; rbtn.Enabled = stpanel.Enabled = true; }));
+            var el = (DateTime.Now - starttime).TotalSeconds;            
+            Invoke(new Action(() => { stopbtn.Enabled = false; rbtn.Enabled = stpanel.Enabled = true; smsg("Total Time (Sec) = " + el, MType.Important); }));
         }
 
         private void clFrm_Load(object sender, EventArgs e)
